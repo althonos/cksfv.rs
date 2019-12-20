@@ -1,10 +1,24 @@
 [package]
-name = "cksfv"
-version = "0.1.0"
-authors = ["Martin Larralde <martin.larralde@ens-paris-saclay.fr>"]
-edition = "2018"
+name         = "cksfv"
+version      = "0.1.0"
+authors      = ["Martin Larralde <martin.larralde@ens-cachan.fr>"]
+edition      = "2018"
+license      = "MIT"
+description  = "A 10x faster cksfv reimplementation using Rust and the crc32fast crate."
+repository   = "https://github.com/althonos/cksfv.rs"
+readme       = "README.md"
+keywords     = ["cksfv", "crc", "integrity", "checksum", "foss"]
+categories   = ["command-line-utilities"]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[badges.travis-ci]
+repository = "althonos/cksfv.rs"
+[badges.codecov]
+repository = "althonos/cksfv.rs"
+service    = "github"
+[badges.is-it-maintained-issue-resolution]
+repository = "althonos/cksfv.rs"
+[badges.maintenance]
+status     = "actively-developed"
 
 [dependencies]
 clap = "*"
@@ -20,4 +34,4 @@ optional = true
 [features]
 mmap = ["memmap"]
 nightly = ["crc32fast/nightly"]
-default-features = []
+default = []
