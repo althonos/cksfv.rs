@@ -64,7 +64,7 @@ fn compute_crc32_inner(mut file: File) -> Result<u32, std::io::Error> {
 // ---------------------------------------------------------------------------
 
 /// Generate a new SFV listing from a list of files.
-fn newsfv<'a, F>(files: F) -> bool
+fn newsfv<'a, F>(files: F, basename: bool) -> bool
 where
     F: IntoIterator<Item = &'a Path>,
 {
@@ -106,6 +106,10 @@ where
     let mut success = true;
     for file in &files {
         match compute_crc32(file) {
+            Ok(crc32) if basename => {
+                let name = file.file_name().unwrap();
+                println!("{} {:X}",  AsRef::<Path>::as_ref(&name).display(), crc32)
+            }
             Ok(crc32) => println!("{} {:X}", file.display(), crc32),
             Err(err) => {
                 success = false;
@@ -116,6 +120,11 @@ where
 
     // return `true` if all CRC32 where successfully computed
     success
+}
+
+/// Check a SFV listing at the given location
+fn cksfv(path: &Path) -> bool {
+    false
 }
 
 // ---------------------------------------------------------------------------
@@ -206,10 +215,11 @@ fn main() -> ! {
 
     // generate a new sfv file if given files as input
     if let Some(files) = matches.values_of("file") {
-        let result = newsfv(files.map(Path::new));
+        let result = newsfv(files.map(Path::new), matches.is_present("b"));
         std::process::exit(!result as i32);
     }
 
     // otherwise is no operation given exit with EINVAL
+    println!("{}", matches.usage());
     std::process::exit(22)
 }

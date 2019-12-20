@@ -33,7 +33,7 @@ Features from the original binary:
 - [x] SFV listing generation compatible with the original `cksfv`
 - [ ] SFV listing validation with `-f`, `-g` or `-r`
 - [ ] Specific options:
-  - [ ] `-b` flag to only print base filenames
+  - [x] `-b` flag to only print base filenames
   - [ ] `-c` flag to print everything to STDOUT
   - [ ] `-C` flag to change directory when processing files
   - [ ] `-i` flag to ignore case on filenames
@@ -51,7 +51,8 @@ Additional features:
 
 Benchmark where conducted using a 1.6GiB file using the `cksfv` binary
 distributed with ArchLinux, or this program compiled with either stable or
-nightly Rust, running [`hyperfine`](https://github.com/sharkdp/hyperfine):
+nightly Rust, running [`hyperfine`](https://github.com/sharkdp/hyperfine),
+on an [Intel i7-8550U CPU](https://en.wikichip.org/wiki/intel/core_i7/i7-8550u):
 
 ```
 Benchmark #1: cksfv test.mkv
