@@ -31,6 +31,9 @@ version = "*"
 version = "*"
 optional = true
 
+[dev-dependencies]
+assert_cli = "*"
+
 [features]
 mmap = ["memmap"]
 nightly = ["crc32fast/nightly"]
