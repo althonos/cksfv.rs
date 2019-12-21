@@ -30,6 +30,7 @@ thanks to a CRC32 implementation that takes advantage of modern CPUs.
 Features from the original binary:
 
 - [x] Exact same Command-Line Interface for scripting compatibility
+- [x] Exact same behaviour with respect to argument parsing
 - [x] SFV listing generation compatible with the original `cksfv`
 - [x] SFV listing validation with `-f`, `-g` or `-r`
 - [ ] Specific options:

@@ -213,7 +213,7 @@ fn main() -> ! {
                 .value_name("file")
                 .help("Verify the sfv file")
                 .takes_value(true)
-                .conflicts_with("g"),
+                .multiple(true)
         )
         .arg(
             Arg::with_name("g")
@@ -221,8 +221,8 @@ fn main() -> ! {
                 .value_name("path")
                 .help("Go to the path name directory and verify the sfv file")
                 .takes_value(true)
+                .multiple(true),
                 .conflicts_with("C")
-                .conflicts_with("f"),
         )
         .arg(
             Arg::with_name("i")
@@ -274,12 +274,14 @@ fn main() -> ! {
     }
 
     // check files using the given SFV listing
-    if let Some(sfv) = matches.value_of("f").map(Path::new) {
-        let workdir = matches.value_of("C").map(Path::new);
+    if let Some(sfvs) = matches.values_of("g") {
+        let sfv = sfvs.last().map(Path::new).unwrap();
+        let workdir = sfv.parent();
         let result = cksfv(sfv, workdir);
         std::process::exit(!result as i32);
-    } else if let Some(sfv) = matches.value_of("g").map(Path::new) {
-        let workdir = sfv.parent();
+    } else if let Some(sfvs) = matches.values_of("f") {
+        let sfv = sfvs.last().map(Path::new).unwrap();
+        let workdir = matches.value_of("C").map(Path::new);
         let result = cksfv(sfv, workdir);
         std::process::exit(!result as i32);
     }
