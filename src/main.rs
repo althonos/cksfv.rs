@@ -162,7 +162,7 @@ fn cksfv(sfv: &Path, workdir: Option<&Path>) -> bool {
                     eprintln!("{:<50}{:<30}", filename.display(), err);
                     success = false
                 }
-                Ok(crc32_new) => {
+                Ok(_) => {
                     eprintln!("{:<50}OK", filename.display());
                 }
             }
@@ -221,8 +221,8 @@ fn main() -> ! {
                 .value_name("path")
                 .help("Go to the path name directory and verify the sfv file")
                 .takes_value(true)
-                .multiple(true),
-                .conflicts_with("C")
+                .multiple(true)
+                .conflicts_with("C"),
         )
         .arg(
             Arg::with_name("i")
@@ -262,8 +262,6 @@ fn main() -> ! {
                 .index(1)
                 .value_name("file")
                 .multiple(true)
-                .conflicts_with("g")
-                .conflicts_with("f"),
         )
         .get_matches();
 

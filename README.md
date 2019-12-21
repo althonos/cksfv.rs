@@ -1,6 +1,6 @@
 # `cksfv.rs` [![Star me](https://img.shields.io/github/stars/althonos/cksfv.rs.svg?style=social&label=Star&maxAge=3600)](https://github.com/althonos/cksfv.rs/stargazers)
 
-*A 10x faster [cksfv](https://zakalwe.fi/~shd/foss/cksfv/) reimplementation
+*A 10x faster drop-in reimplementation of [cksfv](https://zakalwe.fi/~shd/foss/cksfv/)
 using Rust and the [crc32fast](https://crates.io/crates/crc32fast) crate.*
 
 [![TravisCI](https://img.shields.io/travis/althonos/cksfv.rs/master.svg?maxAge=600&style=flat-square)](https://travis-ci.org/althonos/cksfv.rs/branches)

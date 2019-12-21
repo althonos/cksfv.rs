@@ -1,0 +1,24 @@
+dist: xenial
+language: Rust
+cache: cargo
+
+os:
+- osx
+- linux
+
+rust:
+- stable
+- nightly
+
+env:
+  global:
+  - RUST_BACKTRACE=1
+  - PATH="$HOME/.cargo/bin:$PATH"
+
+script:
+- cargo test
+- cargo test --all-features
+
+notifications:
+  email:
+  - althonosdev@gmail.com
