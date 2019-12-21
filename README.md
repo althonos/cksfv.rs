@@ -79,6 +79,33 @@ Summary
    12.59 ± 0.56 times faster than 'cksfv test.mkv'
 ```
 
+Using the generated SFV listing to check the same file, we get the following
+results:
+
+```
+Benchmark #1: cksfv -f test.sfv
+  Time (mean ± σ):      4.672 s ±  0.102 s    [User: 4.380 s, System: 0.269 s]
+  Range (min … max):    4.526 s …  4.845 s    10 runs
+
+Benchmark #2: cargo +stable run --release -- -f test.sfv
+  Time (mean ± σ):     344.8 ms ±  12.0 ms    [User: 145.9 ms, System: 194.1 ms]
+  Range (min … max):   325.0 ms … 355.7 ms    10 runs
+
+Benchmark #3: cargo +nightly run --release -- -f test.sfv
+  Time (mean ± σ):     356.5 ms ±   7.8 ms    [User: 144.4 ms, System: 210.2 ms]
+  Range (min … max):   349.3 ms … 374.3 ms    10 runs
+
+Benchmark #4: cargo +nightly run --all-features --release -- -f test.sfv
+  Time (mean ± σ):     300.4 ms ±  12.4 ms    [User: 197.3 ms, System: 99.8 ms]
+  Range (min … max):   290.7 ms … 324.6 ms    10 runs
+
+Summary
+  'cargo +nightly run --all-features --release -- -f test.sfv' ran
+    1.15 ± 0.06 times faster than 'cargo +stable run --release -- -f test.sfv'
+    1.19 ± 0.06 times faster than 'cargo +nightly run --release -- -f test.sfv'
+   15.55 ± 0.72 times faster than 'cksfv -f test.sfv'
+```
+
 ## 📜 License
 
 This tool is provided under the open-source
