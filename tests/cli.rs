@@ -36,7 +36,7 @@ mod behaviour {
             .with_args(&["-C", &data(""), "-f", &data("1.sfv"), "-f", &data("2.sfv")])
             .succeeds()
             .and()
-            .stdout().contains("2.sfv")
+            .stdout().contains("Verifying: 2.sfv")
             .unwrap()
     }
 
@@ -47,7 +47,19 @@ mod behaviour {
             .with_args(&["-g", &data("1.sfv"), "-g", &data("2.sfv")])
             .succeeds()
             .and()
-            .stdout().contains("2.sfv")
+            .stdout().contains("Verifying: 2.sfv")
+            .unwrap()
+    }
+
+    #[test]
+    /// Check that when given both files to check and files to create a new
+    /// SFV for the program only checks the existing SFV.
+    fn cksfv_priority_over_newsfv() {
+        assert_cli::Assert::main_binary()
+            .with_args(&["-g", &data("1.sfv"), &data("2.txt")])
+            .succeeds()
+            .and()
+            .stdout().contains("Verifying: 1.sfv")
             .unwrap()
     }
 }

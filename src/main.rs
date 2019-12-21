@@ -267,12 +267,6 @@ fn main() -> ! {
         )
         .get_matches();
 
-    // generate a new sfv file if given files as input
-    if let Some(files) = matches.values_of("file") {
-        let result = newsfv(files.map(Path::new), matches.is_present("b"));
-        std::process::exit(!result as i32);
-    }
-
     // check files using the given SFV listing
     if let Some(sfvs) = matches.values_of("g") {
         let sfv = sfvs.last().map(Path::new).unwrap();
@@ -283,6 +277,12 @@ fn main() -> ! {
         let sfv = sfvs.last().map(Path::new).unwrap();
         let workdir = matches.value_of("C").map(Path::new);
         let result = cksfv(sfv, workdir);
+        std::process::exit(!result as i32);
+    }
+
+    // generate a new sfv file if given files as input
+    if let Some(files) = matches.values_of("file") {
+        let result = newsfv(files.map(Path::new), matches.is_present("b"));
         std::process::exit(!result as i32);
     }
 
