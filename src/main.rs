@@ -8,6 +8,8 @@ extern crate memmap;
 
 use std::fs::File;
 use std::io::Read;
+use std::io::BufRead;
+use std::io::BufReader;
 use std::iter::IntoIterator;
 use std::path::Path;
 
@@ -122,9 +124,59 @@ where
     success
 }
 
-/// Check a SFV listing at the given location
-fn cksfv(path: &Path) -> bool {
-    false
+/// Check a SFV listing at the given location, optionally using `workdir`.
+fn cksfv(sfv: &Path, workdir: Option<&Path>) -> bool {
+    // print the terminal "UI"
+    let workdir = workdir.unwrap_or_else(|| Path::new("."));
+    println!(
+        "--( Verifying: {} ){}",
+        sfv.display(),
+        "-".repeat(63 - sfv.display().to_string().len())
+    );
+
+    // open the SFV listing
+    let listing = match File::open(sfv) {
+        Ok(file) => BufReader::new(file),
+        Err(err) => {
+            eprintln!("cksfv: {}: {}", sfv.display(), err);
+            return false;
+        }
+    };
+
+    // check every line of the listing
+    let mut success = true;
+    let mut lines = listing.lines();
+    while let Some(Ok(line)) = lines.next() {
+        if !line.starts_with(';') {
+            // extract filename and CRC from listing
+            let i = line.trim_end().rfind(' ').unwrap();
+            let filename = Path::new(&line[..i]);
+            let crc32_old = u32::from_str_radix(&line[i+1..], 16).unwrap();
+            // check the current CRC32 and compare against recorded one
+            match compute_crc32(&workdir.join(filename)) {
+                Ok(crc32_new) if crc32_new != crc32_old => {
+                    eprintln!("{:<50}different CRC", filename.display());
+                    success = false;
+                }
+                Err(err) => {
+                    eprintln!("{:<50}{:<30}", filename.display(), err);
+                    success = false
+                }
+                Ok(crc32_new) => {
+                    eprintln!("{:<50}OK", filename.display());
+                }
+            }
+        }
+    }
+
+    // add result message
+    eprintln!("{}", "-".repeat(80));
+    if success {
+        eprintln!("Everything OK");
+    } else {
+        eprintln!("Errors Occured")
+    }
+    success
 }
 
 // ---------------------------------------------------------------------------
@@ -160,7 +212,8 @@ fn main() -> ! {
                 .short("f")
                 .value_name("file")
                 .help("Verify the sfv file")
-                .takes_value(true),
+                .takes_value(true)
+                .conflicts_with("g"),
         )
         .arg(
             Arg::with_name("g")
@@ -168,7 +221,8 @@ fn main() -> ! {
                 .value_name("path")
                 .help("Go to the path name directory and verify the sfv file")
                 .takes_value(true)
-                .conflicts_with("C"),
+                .conflicts_with("C")
+                .conflicts_with("f"),
         )
         .arg(
             Arg::with_name("i")
@@ -216,6 +270,17 @@ fn main() -> ! {
     // generate a new sfv file if given files as input
     if let Some(files) = matches.values_of("file") {
         let result = newsfv(files.map(Path::new), matches.is_present("b"));
+        std::process::exit(!result as i32);
+    }
+
+    // check files using the given SFV listing
+    if let Some(sfv) = matches.value_of("f").map(Path::new) {
+        let workdir = matches.value_of("C").map(Path::new);
+        let result = cksfv(sfv, workdir);
+        std::process::exit(!result as i32);
+    } else if let Some(sfv) = matches.value_of("g").map(Path::new) {
+        let workdir = sfv.parent();
+        let result = cksfv(sfv, workdir);
         std::process::exit(!result as i32);
     }
 

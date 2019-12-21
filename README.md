@@ -31,11 +31,11 @@ Features from the original binary:
 
 - [x] Exact same Command-Line Interface for scripting compatibility
 - [x] SFV listing generation compatible with the original `cksfv`
-- [ ] SFV listing validation with `-f`, `-g` or `-r`
+- [x] SFV listing validation with `-f`, `-g` or `-r`
 - [ ] Specific options:
   - [x] `-b` flag to only print base filenames
   - [ ] `-c` flag to print everything to STDOUT
-  - [ ] `-C` flag to change directory when processing files
+  - [x] `-C` flag to change directory when processing files
   - [ ] `-i` flag to ignore case on filenames
   - [ ] `-L` flag to follow symlinks
   - [ ] `-q` flag to only print error messages
