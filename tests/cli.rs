@@ -36,7 +36,7 @@ mod behaviour {
             .with_args(&["-C", &data(""), "-f", &data("1.sfv"), "-f", &data("2.sfv")])
             .succeeds()
             .and()
-            .stdout().contains(format!("Verifying: {}", data("2.sfv")).as_str())
+            .stderr().contains(format!("Verifying: {}", data("2.sfv")).as_str())
             .unwrap()
     }
 
@@ -47,7 +47,7 @@ mod behaviour {
             .with_args(&["-g", &data("1.sfv"), "-g", &data("2.sfv")])
             .succeeds()
             .and()
-            .stdout().contains(format!("Verifying: {}", data("2.sfv")).as_str())
+            .stderr().contains(format!("Verifying: {}", data("2.sfv")).as_str())
             .unwrap()
     }
 
@@ -60,7 +60,7 @@ mod behaviour {
             .with_args(&["-g", &data("1.sfv"), &data("2.txt")])
             .succeeds()
             .and()
-            .stdout().contains(format!("Verifying: {}", data("2.sfv")).as_str())
+            .stderr().contains(format!("Verifying: {}", data("2.sfv")).as_str())
             .unwrap()
     }
 }

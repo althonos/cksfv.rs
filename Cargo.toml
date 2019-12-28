@@ -23,6 +23,7 @@ status     = "actively-developed"
 [dependencies]
 clap = "*"
 chrono = "*"
+getset = "*"
 
 [dependencies.crc32fast]
 version = "*"
