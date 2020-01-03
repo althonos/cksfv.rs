@@ -33,13 +33,14 @@ Features from the original binary:
 - [x] Exact same behaviour with respect to argument parsing
 - [x] SFV listing generation compatible with the original `cksfv`
 - [x] SFV listing validation with `-f`, `-g` or `-r`
+- [ ] SFV filtering in validation mode using files given as arguments
 - [ ] Specific options:
   - [x] `-b` flag to only print base filenames
   - [ ] `-c` flag to print everything to STDOUT
   - [x] `-C` flag to change directory when processing files
   - [ ] `-i` flag to ignore case on filenames
-  - [ ] `-L` flag to follow symlinks
-  - [ ] `-q` flag to only print error messages
+  - [x] `-L` flag to follow symlinks
+  - [x] `-q` flag to only print error messages
   - [ ] `-s` flag to replace backslashes
 
 Additional features:
