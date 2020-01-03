@@ -73,6 +73,57 @@ mod io {
     use super::data;
 
     #[test]
+    fn test_g() {
+        assert_cli::Assert::main_binary()
+            .with_args(&["-g", &data("12.sfv")])
+            .succeeds()
+            .and()
+            .stdout().is("")
+            .and()
+            .stderr().satisfies(|x|
+                x.ends_with(&textwrap::dedent(
+                    r#"
+                    --( Verifying: tests/data/12.sfv )----------------------------------------------
+                    1.txt                                             OK
+                    2.txt                                             OK
+                    --------------------------------------------------------------------------------
+                    Everything OK
+                    "#,
+                )),
+                "wrong output\n"
+            )
+            .unwrap()
+    }
+
+    #[test]
+    fn test_g_with_c() {
+        assert_cli::Assert::main_binary()
+            .with_args(&["-c", "-g", &data("12.sfv")])
+            .succeeds()
+            .and()
+            .stdout().is(
+                textwrap::dedent(
+                    r#"
+                    1.txt                                             OK
+                    2.txt                                             OK
+                    Everything OK
+                    "#
+                ).as_str()
+            )
+            .and()
+            .stderr().satisfies(|x|
+                x.ends_with(&textwrap::dedent(
+                    r#"
+                    --( Verifying: tests/data/12.sfv )----------------------------------------------
+                    --------------------------------------------------------------------------------
+                    "#,
+                )),
+                "wrong output\n"
+            )
+            .unwrap()
+    }
+
+    #[test]
     /// Check that `-r` flag outputs everything to stderr
     fn test_recursive() {
         assert_cli::Assert::main_binary()
