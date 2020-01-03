@@ -24,6 +24,7 @@ status     = "actively-developed"
 clap = "*"
 chrono = "*"
 getset = "*"
+walkdir = "*"
 
 [dependencies.crc32fast]
 version = "*"
@@ -34,6 +35,8 @@ optional = true
 
 [dev-dependencies]
 assert_cli = "*"
+tempfile = "*"
+textwrap = "*"
 
 [features]
 mmap = ["memmap"]

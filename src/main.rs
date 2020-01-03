@@ -116,17 +116,58 @@ fn main() -> ! {
 
     // build config
     let mut config = Config::default();
+    config.set_quiet(matches.is_present("q"));
+
+    // check files recursively
+    if matches.is_present("r") {
+        // get the base directory
+        let cwd = std::env::current_dir().unwrap();
+
+        // get the files to check if any
+        let files = matches.values_of("file").map(|f| f.map(Path::new));
+
+        // assign the right output stream
+        if matches.is_present("q") {
+            config.set_stderr(Output::devnull());
+            config.set_stdout(Output::stderr());
+        } else if !matches.is_present("c") {
+            config.set_stdout(Output::stderr());
+        }
+
+
+        // recursively traverse the directory
+        let mut retcode = 0;
+        let it = walkdir::WalkDir::new(&cwd)
+                .follow_links(matches.is_present("L"))
+                .sort_by(|a, b| a.depth().cmp(&b.depth()) );
+        for result in it {
+            if let Ok(entry) = result {
+                if entry.path().extension().map(|x| x == "sfv").unwrap_or(false) {
+                    let workdir = entry.path().parent().unwrap();
+                    let sfv = entry.path().strip_prefix(workdir).unwrap();
+                    write!(config.stderr_mut(), "Entering directory: {}\n", workdir.display()).unwrap();
+                    std::env::set_current_dir(workdir).unwrap();
+                    retcode *= 1 - cksfv(sfv, None, config.clone(), files.clone()).unwrap() as i32;
+                }
+            }
+        }
+
+        std::env::set_current_dir(&cwd).unwrap();
+        std::process::exit(retcode);
+    }
 
     // check files using the given SFV listing
     if matches.is_present("g") || matches.is_present("f") {
         // get the path to the SFV listing and the working directory
-
         let sfv = matches.values_of("g").or(matches.values_of("f")).unwrap().last().map(Path::new).unwrap();
         let workdir = if matches.is_present("g") {
             sfv.parent()
         } else {
             matches.value_of("C").map(Path::new)
         };
+
+        // get the files to check if any
+        let files = matches.values_of("file").map(|f| f.map(Path::new));
 
         // assign the right output stream
         if matches.is_present("q") {
@@ -137,7 +178,7 @@ fn main() -> ! {
         }
 
         // run the operation
-        let result = cksfv(sfv, workdir, config).unwrap();
+        let result = cksfv(sfv, workdir, config, files).unwrap();
         std::process::exit(!result as i32);
     }
 
