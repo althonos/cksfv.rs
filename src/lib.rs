@@ -6,7 +6,6 @@ extern crate crc32fast;
 #[cfg(feature = "mmap")]
 extern crate memmap;
 
-use std::collections::HashMap;
 use std::fs::File;
 use std::fmt::Debug;
 use std::io::Read;
@@ -24,8 +23,6 @@ use chrono::Timelike;
 use getset::Getters;
 use getset::MutGetters;
 use getset::Setters;
-use clap::App;
-use clap::Arg;
 use crc32fast::Hasher;
 
 /// Use a 64k buffer size for better performance.
@@ -302,14 +299,14 @@ where
     let listing = match File::open(sfv) {
         Ok(file) => BufReader::new(file),
         Err(err) => {
-            write!(cfg.stderr, "cksfv: {}: {}\n", sfv.display(), err);
+            write!(cfg.stderr, "cksfv: {}: {}\n", sfv.display(), err)?;
             return Ok(false);
         }
     };
 
     let mut success = true;
     let mut lines = listing.lines();
-    if let Some(files) = files {
+    if let Some(_files) = files {
         // only check the files given as arguments
         unimplemented!("TODO: checking with file arguments");
     } else {

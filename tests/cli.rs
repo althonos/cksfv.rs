@@ -1,7 +1,6 @@
 extern crate assert_cli;
 
 use std::path::Path;
-use std::path::PathBuf;
 
 /// Get the path to a resource in the `data` folder as a string.
 fn data(name: &str) -> String {
@@ -21,6 +20,7 @@ mod behaviour {
     use super::data;
 
     #[test]
+    #[allow(non_snake_case)]
     /// Check that running with both `-g` and `-C` flags fails.
     fn failure_g_and_C_flags() {
         assert_cli::Assert::main_binary()

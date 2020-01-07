@@ -6,24 +6,11 @@ extern crate crc32fast;
 #[cfg(feature = "mmap")]
 extern crate memmap;
 
-use std::collections::HashMap;
-use std::fs::File;
-use std::fmt::Debug;
-use std::io::Read;
-use std::io::BufRead;
-use std::io::BufReader;
 use std::io::Write;
-use std::io::Error as IoError;
-use std::iter::IntoIterator;
 use std::path::Path;
 
-use chrono::DateTime;
-use chrono::Datelike;
-use chrono::Local;
-use chrono::Timelike;
 use clap::App;
 use clap::Arg;
-use crc32fast::Hasher;
 
 use cksfv::Config;
 use cksfv::Output;
