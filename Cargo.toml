@@ -37,6 +37,7 @@ optional = true
 assert_cli = "*"
 tempfile = "*"
 textwrap = "*"
+textwrap-macros = "*"
 
 [features]
 mmap = ["memmap"]

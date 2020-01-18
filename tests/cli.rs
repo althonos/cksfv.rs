@@ -1,4 +1,6 @@
 extern crate assert_cli;
+#[macro_use]
+extern crate textwrap_macros;
 
 use std::path::Path;
 
@@ -56,13 +58,13 @@ mod behaviour {
     /// Check that when given both files to check and files to create a new
     /// SFV for the program only checks the existing SFV.
     ///
-    /// FAILS because of clap-rs/clap#1610
+    /// TODO
     fn cksfv_priority_over_newsfv() {
         assert_cli::Assert::main_binary()
             .with_args(&["-g", &data("1.sfv"), &data("2.txt")])
             .succeeds()
             .and()
-            .stderr().contains(format!("Verifying: {}", data("2.sfv")).as_str())
+            .stderr().contains(format!("Verifying: {}", data("1.sfv")).as_str())
             .unwrap()
     }
 }
@@ -80,17 +82,16 @@ mod io {
             .and()
             .stdout().is("")
             .and()
-            .stderr().satisfies(|x|
-                x.ends_with(&textwrap::dedent(
+            .stderr().contains(
+                dedent!(
                     r#"
                     --( Verifying: tests/data/12.sfv )----------------------------------------------
                     1.txt                                             OK
                     2.txt                                             OK
                     --------------------------------------------------------------------------------
                     Everything OK
-                    "#,
-                )),
-                "wrong output\n"
+                    "#
+                )
             )
             .unwrap()
     }
@@ -102,21 +103,21 @@ mod io {
             .succeeds()
             .and()
             .stdout().is(
-                textwrap::dedent(
+                dedent!(
                     r#"
                     1.txt                                             OK
                     2.txt                                             OK
                     Everything OK
                     "#
-                ).as_str()
+                )
             )
             .and()
             .stderr().satisfies(|x|
-                x.ends_with(&textwrap::dedent(
+                x.ends_with(dedent!(
                     r#"
                     --( Verifying: tests/data/12.sfv )----------------------------------------------
                     --------------------------------------------------------------------------------
-                    "#,
+                    "#
                 )),
                 "wrong output\n"
             )
@@ -132,34 +133,58 @@ mod io {
             .and()
             .stdout().is("")
             .and()
-            .stderr().satisfies(|x|
-                x.ends_with(&textwrap::dedent(&format!(
-                    r#"
-                    Entering directory: {projdir}/tests/data
-                    --( Verifying: 12.sfv )---------------------------------------------------------
-                    1.txt                                             OK
-                    2.txt                                             OK
-                    --------------------------------------------------------------------------------
-                    Everything OK
-                    Entering directory: {projdir}/tests/data
-                    --( Verifying: 2.sfv )----------------------------------------------------------
-                    2.txt                                             OK
-                    --------------------------------------------------------------------------------
-                    Everything OK
-                    Entering directory: {projdir}/tests/data
-                    --( Verifying: 1.sfv )----------------------------------------------------------
-                    1.txt                                             OK
-                    --------------------------------------------------------------------------------
-                    Everything OK
-                    Entering directory: {projdir}/tests/data
-                    --( Verifying: 0.sfv )----------------------------------------------------------
-                    --------------------------------------------------------------------------------
-                    Everything OK
-                    "#,
-                    projdir = env!("CARGO_MANIFEST_DIR"))
-                )),
-                "wrong output\n"
-            )
+            .stderr()
+                .contains(
+                    textwrap::dedent(&format!(
+                        r#"
+                        Entering directory: {projdir}/tests/data
+                        --( Verifying: 12.sfv )---------------------------------------------------------
+                        1.txt                                             OK
+                        2.txt                                             OK
+                        --------------------------------------------------------------------------------
+                        Everything OK
+                        "#,
+                        projdir = env!("CARGO_MANIFEST_DIR"))
+                    ).trim()
+                )
+            .stderr()
+                .contains(
+                    textwrap::dedent(&format!(
+                        r#"
+                        Entering directory: {projdir}/tests/data
+                        --( Verifying: 2.sfv )----------------------------------------------------------
+                        2.txt                                             OK
+                        --------------------------------------------------------------------------------
+                        Everything OK
+                        "#,
+                        projdir = env!("CARGO_MANIFEST_DIR"))
+                    ).trim()
+                )
+            .stderr()
+                .contains(
+                    textwrap::dedent(&format!(
+                        r#"
+                        Entering directory: {projdir}/tests/data
+                        --( Verifying: 1.sfv )----------------------------------------------------------
+                        1.txt                                             OK
+                        --------------------------------------------------------------------------------
+                        Everything OK
+                        "#,
+                        projdir = env!("CARGO_MANIFEST_DIR"))
+                    ).trim()
+                )
+            .stderr()
+                .contains(
+                    textwrap::dedent(&format!(
+                        r#"
+                        Entering directory: {projdir}/tests/data
+                        --( Verifying: 0.sfv )----------------------------------------------------------
+                        --------------------------------------------------------------------------------
+                        Everything OK
+                        "#,
+                        projdir = env!("CARGO_MANIFEST_DIR")
+                    )).trim()
+                )
             .unwrap()
     }
 
@@ -169,39 +194,71 @@ mod io {
             .with_args(&["-r", "-c"])
             .succeeds()
             .and()
-            .stdout().is(textwrap::dedent(
-                r#"
-                1.txt                                             OK
-                2.txt                                             OK
-                Everything OK
-                2.txt                                             OK
-                Everything OK
-                1.txt                                             OK
-                Everything OK
-                Everything OK
-                "#
-            ).as_str())
+            .stdout()
+                .contains(dedent!(
+                    r#"
+                    1.txt                                             OK
+                    2.txt                                             OK
+                    Everything OK
+                    "#
+                ).trim())
+            .stdout()
+                .contains(dedent!(
+                    r#"
+                    1.txt                                             OK
+                    Everything OK
+                    "#
+                ).trim())
+            .stdout()
+                .contains(dedent!(
+                    r#"
+                    2.txt                                             OK
+                    Everything OK
+                    "#
+                ).trim())
+            .stdout()
+                .contains(dedent!(
+                    r#"
+                    Everything OK
+                    "#
+                ).trim())
             .and()
-            .stderr().satisfies(|x|
-                x.ends_with(&textwrap::dedent(&format!(
+            .stderr()
+                .contains(textwrap::dedent(&format!(
                     r#"
                     Entering directory: {projdir}/tests/data
                     --( Verifying: 12.sfv )---------------------------------------------------------
                     --------------------------------------------------------------------------------
+                    "#,
+                    projdir = env!("CARGO_MANIFEST_DIR")
+                )).trim())
+            .stderr()
+                .contains(textwrap::dedent(&format!(
+                    r#"
                     Entering directory: {projdir}/tests/data
                     --( Verifying: 2.sfv )----------------------------------------------------------
                     --------------------------------------------------------------------------------
+                    "#,
+                    projdir = env!("CARGO_MANIFEST_DIR")
+                )).trim())
+            .stderr()
+                .contains(textwrap::dedent(&format!(
+                    r#"
                     Entering directory: {projdir}/tests/data
                     --( Verifying: 1.sfv )----------------------------------------------------------
                     --------------------------------------------------------------------------------
+                    "#,
+                    projdir = env!("CARGO_MANIFEST_DIR")
+                )).trim())
+            .stderr()
+                .contains(textwrap::dedent(&format!(
+                    r#"
                     Entering directory: {projdir}/tests/data
                     --( Verifying: 0.sfv )----------------------------------------------------------
                     --------------------------------------------------------------------------------
                     "#,
-                    projdir = env!("CARGO_MANIFEST_DIR"))
-                )),
-                "wrong output\n"
-            )
+                    projdir = env!("CARGO_MANIFEST_DIR")
+                )).trim())
             .unwrap()
     }
 

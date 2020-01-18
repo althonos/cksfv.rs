@@ -50,17 +50,17 @@ fn main() -> ! {
                 .help("Verify the sfv file")
                 .takes_value(true)
                 .multiple(true)
-                .number_of_values(1)
+                .number_of_values(1),
         )
         .arg(
             Arg::with_name("g")
                 .short("g")
                 .value_name("path")
                 .help("Go to the path name directory and verify the sfv file")
-                .takes_value(true)
+                // .takes_value(true)
                 .multiple(true)
-                .conflicts_with("C"),
-                .number_of_values(1)
+                .conflicts_with("C")
+                .number_of_values(1),
         )
         .arg(
             Arg::with_name("i")
