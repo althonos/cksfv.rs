@@ -50,6 +50,7 @@ fn main() -> ! {
                 .help("Verify the sfv file")
                 .takes_value(true)
                 .multiple(true)
+                .number_of_values(1)
         )
         .arg(
             Arg::with_name("g")
@@ -59,6 +60,7 @@ fn main() -> ! {
                 .takes_value(true)
                 .multiple(true)
                 .conflicts_with("C"),
+                .number_of_values(1)
         )
         .arg(
             Arg::with_name("i")
