@@ -436,9 +436,9 @@ dependencies = [
 
 [[package]]
 name = "textwrap-macros"
-version = "0.2.0"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5cf81531e7e15f652ef1c31f3f5b0b0def958b15a2f2b803baf884a58b44e650"
+checksum = "525e2c082161c6dbb153164ac111222879ea9ca60808521a39648c941ad8cf81"
 dependencies = [
  "proc-macro-hack",
  "textwrap-macros-impl",
@@ -446,9 +446,9 @@ dependencies = [
 
 [[package]]
 name = "textwrap-macros-impl"
-version = "0.2.0"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0d5d8a2740f50259cffae74c19aa1ffc89859a87e6cf0941c7f777dbd1395dcb"
+checksum = "cc825977d9d1246621e2d398b6de6258231e72e501333cfc8e88b3f610178e5f"
 dependencies = [
  "proc-macro-hack",
  "syn",
