@@ -3,7 +3,7 @@
 *A 10x faster drop-in reimplementation of [cksfv](https://zakalwe.fi/~shd/foss/cksfv/)
 using Rust and the [crc32fast](https://crates.io/crates/crc32fast) crate.*
 
-[![TravisCI](https://img.shields.io/travis/althonos/cksfv.rs/master.svg?maxAge=600&style=flat-square)](https://travis-ci.org/althonos/cksfv.rs/branches)
+[![TravisCI](https://img.shields.io/travis/com/althonos/cksfv.rs/master.svg?maxAge=600&style=flat-square)](https://travis-ci.com/althonos/cksfv.rs/branches)
 [![Codecov](https://img.shields.io/codecov/c/gh/althonos/cksfv.rs/master.svg?style=flat-square&maxAge=600)](https://codecov.io/gh/althonos/cksfv.rs)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square&maxAge=2678400)](https://choosealicense.com/licenses/mit/)
 [![Source](https://img.shields.io/badge/source-GitHub-303030.svg?maxAge=2678400&style=flat-square)](https://github.com/althonos/cksfv.rs)
