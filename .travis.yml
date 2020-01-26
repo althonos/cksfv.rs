@@ -1,6 +1,13 @@
 dist: xenial
 language: Rust
-cache: cargo
+
+cache:
+  cargo: true
+  directories:
+  - $HOME/.cargo/bin
+
+git:
+  depth: false
 
 os:
 - osx
@@ -15,9 +22,26 @@ env:
   - RUST_BACKTRACE=1
   - PATH="$HOME/.cargo/bin:$PATH"
 
+before_install:
+- ci/travis/setup.sh
+
 script:
-- cargo test
-- cargo test --all-features
+- ci/travis/script.sh
+
+after_script:
+- curl -SsL "https://codecov.io/bash" | bash
+
+before_cache:
+- cargo cache -a
+
+deploy:
+  provider: script
+  script: ci/travis/deploy.sh
+  on:
+    tags: true
+    repo: althonos/cksfv.rs
+    rust: stable
+    os: linux
 
 notifications:
   email:
