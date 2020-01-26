@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/althonos/cksfv.rs/compare/c8bd1ac...HEAD
+[Unreleased]: https://github.com/althonos/cksfv.rs/compare/v0.1.0...HEAD
+
+
+## [v0.1.0] - 2020-01-26
+
+[v0.1.0]: https://github.com/althonos/cksfv.rs/compare/c8bd1ac...v0.1.0
 
 Initial release.
