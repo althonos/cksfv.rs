@@ -260,9 +260,9 @@ where
         match compute_crc32(file) {
             Ok(crc32) if cfg.print_basename => {
                 let name = file.file_name().unwrap();
-                write!(cfg.stdout, "{} {:X}\n",  AsRef::<Path>::as_ref(&name).display(), crc32)?
+                write!(cfg.stdout, "{} {:08X}\n",  AsRef::<Path>::as_ref(&name).display(), crc32)?
             }
-            Ok(crc32) => write!(cfg.stdout, "{} {:X}\n", file.display(), crc32)?,
+            Ok(crc32) => write!(cfg.stdout, "{} {:08X}\n", file.display(), crc32)?,
             Err(err) => {
                 success = false;
                 write!(cfg.stderr, "cksfv: {}: {}\n", file.display(), err)?
