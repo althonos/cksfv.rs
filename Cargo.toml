@@ -21,7 +21,7 @@ repository = "althonos/cksfv.rs"
 status     = "actively-developed"
 
 [dependencies]
-clap = "2.33.0"
+clap = "2.33.1"
 chrono = "0.4.11"
 getset = "0.1.0"
 walkdir = "2.3.1"
