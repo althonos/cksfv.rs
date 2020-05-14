@@ -23,7 +23,7 @@ status     = "actively-developed"
 [dependencies]
 clap = "2.33.1"
 chrono = "0.4.11"
-getset = "0.1.0"
+getset = "0.1.1"
 walkdir = "2.3.1"
 
 [dependencies.crc32fast]
