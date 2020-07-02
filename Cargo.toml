@@ -22,7 +22,7 @@ status     = "actively-developed"
 
 [dependencies]
 clap = "2.33.1"
-chrono = "0.4.11"
+chrono = "0.4.12"
 getset = "0.1.1"
 walkdir = "2.3.1"
 
