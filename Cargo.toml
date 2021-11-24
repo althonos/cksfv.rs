@@ -27,7 +27,7 @@ getset = "0.1.1"
 walkdir = "2.3.1"
 
 [dependencies.crc32fast]
-version = "1.2.0"
+version = "1.2.2"
 
 [dependencies.memmap]
 version = "0.7.0"
