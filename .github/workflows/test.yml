@@ -1,0 +1,114 @@
+name: Test
+
+on:
+  - push
+  - pull_request
+
+jobs:
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v1
+    - name: Setup Rust stable
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
+        override: true
+        components: rustfmt
+    - name: Check code format
+      uses: actions-rs/cargo@v1
+      with:
+        command: fmt
+        args: --all -- --check
+    - name: Check code quality
+      uses: actions-rs/cargo@v1
+      with:
+        command: clippy
+
+  check:
+    name: Build (${{ matrix.rust-toolchain }})
+    needs: lint
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust-toolchain:
+          - stable
+          - beta
+          - nightly
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v1
+    - name: Setup Rust ${{ matrix.rust-toolchain }}
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: ${{ matrix.rust-toolchain }}
+        override: true
+    - name: Setup cache for cargo
+      uses: actions/cache@v2
+      with:
+        path: target
+        key: ${{ runner.os }}-cargo-${{ matrix.rust-toolchain }}-${{ matrix.feature }}
+    - name: Check code
+      uses: actions-rs/cargo@v1
+      with:
+        command: check
+
+  publish:
+    needs: check
+    runs-on: ubuntu-latest
+    environment: Crates.io
+    if: "startsWith(github.ref, 'refs/tags/v')"
+    name: Publish Rust crate
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v1
+    - name: Setup Rust stable
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
+        override: true
+    - name: Package and publish crate
+      uses: actions-rs/cargo@v1
+      with:
+        command: publish
+        args: '--token ${{ secrets.CRATES_IO_TOKEN }}'
+
+  release:
+    environment: GitHub Releases
+    runs-on: ubuntu-latest
+    if: "startsWith(github.ref, 'refs/tags/v')"
+    name: Release
+    needs: publish
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v1
+    - name: Release a Changelog
+      uses: rasmus-saks/release-a-changelog-action@v1.0.1
+      with:
+        github-token: '${{ secrets.GITHUB_TOKEN }}'
+
+  upload-assets:
+    name: Upload artifacts
+    needs: release
+    if: "startsWith(github.ref, 'refs/tags/v')"
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: taiki-e/upload-rust-binary-action@v1
+        with:
+          bin: cksfv
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checksum: sha256
+          include: CHANGELOG.md,COPYING,README.md
