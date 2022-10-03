@@ -9,8 +9,9 @@ extern crate memmap;
 use std::io::Write;
 use std::path::Path;
 
-use clap::App;
+use clap::Command;
 use clap::Arg;
+use clap::ArgAction;
 
 use cksfv::Config;
 use cksfv::Output;
@@ -19,107 +20,114 @@ use cksfv::newsfv;
 
 fn main() -> ! {
     // read CLI arguments
-    let matches = App::new("cksfv.rs")
+    let mut command = Command::new("cksfv.rs")
         .version(crate_version!())
         .author(crate_authors!("\n"))
-        .usage("cksfv [-bciq] [-C dir] [-f file] [-g path] [file ...]")
+        .override_usage("cksfv [-bciq] [-C dir] [-f file] [-g path] [file ...]")
         .arg(
-            Arg::with_name("b")
-                .short("b")
+            Arg::new("b")
+                .short('b')
                 .help("Print only the basename when creating an sfv")
-                .takes_value(false),
+                .action(ArgAction::SetTrue)
         )
         .arg(
-            Arg::with_name("c")
-                .short("c")
+            Arg::new("c")
+                .short('c')
                 .help("Use stdout for printing progress and final resolution")
-                .takes_value(false),
+                .action(ArgAction::SetTrue)
         )
         .arg(
-            Arg::with_name("C")
-                .short("C")
+            Arg::new("C")
+                .short('C')
                 .value_name("dir")
                 .help("Change to directory for processing")
-                .takes_value(true)
+                
                 .conflicts_with("g"),
         )
         .arg(
-            Arg::with_name("f")
-                .short("f")
+            Arg::new("f")
+                .short('f')
                 .value_name("file")
                 .help("Verify the sfv file")
-                .takes_value(true)
-                .multiple(true)
+                .action(ArgAction::Append)
                 .number_of_values(1),
         )
         .arg(
-            Arg::with_name("g")
-                .short("g")
+            Arg::new("g")
+                .short('g')
                 .value_name("path")
                 .help("Go to the path name directory and verify the sfv file")
-                // .takes_value(true)
-                .multiple(true)
+                .action(ArgAction::Append)
                 .conflicts_with("C")
                 .number_of_values(1),
         )
         .arg(
-            Arg::with_name("i")
-                .short("i")
+            Arg::new("i")
+                .short('i')
                 .help("Ignore case on filenames")
-                .takes_value(false),
+                .action(ArgAction::SetTrue)
         )
         .arg(
-            Arg::with_name("L")
-                .short("L")
-                .help("Follow symlinks in recursive mode"),
+            Arg::new("L")
+                .short('L')
+                .help("Follow symlinks in recursive mode")
+                .action(ArgAction::SetTrue)
         )
         .arg(
-            Arg::with_name("q")
-                .short("q")
-                .help("Quiet, only prints errors messages"),
+            Arg::new("q")
+                .short('q')
+                .help("Quiet, only prints errors messages")
+                .action(ArgAction::SetTrue)
         )
         .arg(
-            Arg::with_name("r")
-                .short("r")
+            Arg::new("r")
+                .short('r')
                 .help("Recursively check .sfv files in subdirectories")
+                .action(ArgAction::SetTrue)
                 .conflicts_with("f")
                 .conflicts_with("g"),
         )
         .arg(
-            Arg::with_name("s")
-                .short("s")
-                .help("Replace backslashes with slashes on filenames"),
+            Arg::new("s")
+                .short('s')
+                .help("Replace backslashes with slashes on filenames")
+                .action(ArgAction::SetTrue),
         )
         .arg(
-            Arg::with_name("v")
-                .short("v")
-                .help("Verbose, by default this option is on"),
+            Arg::new("v")
+                .short('v')
+                .help("Verbose, by default this option is on")
+                .action(ArgAction::SetTrue),
         )
         .arg(
-            Arg::with_name("file")
+            Arg::new("file")
                 .index(1)
                 .value_name("file")
-                .multiple(true)
-        )
+                .action(ArgAction::Append),
+        );
+
+    let matches = command
+        .clone()
         .get_matches();
 
     // build config
     let mut config = Config::default();
-    config.set_quiet(matches.is_present("q"));
+    config.set_quiet(matches.get_flag("q"));
 
     // check files recursively
-    if matches.is_present("r") {
+    if matches.get_flag("r") {
         // get the base directory
         let cwd = std::env::current_dir().unwrap();
 
         // get the files to check if any
-        let files = matches.values_of("file").map(|f| f.map(Path::new));
+        let files = matches.get_many::<&str>("file")
+            .map(|values| values.map(Path::new));
 
         // assign the right output stream
-        if matches.is_present("q") {
+        if matches.get_flag("q") {
             config.set_stderr(Output::devnull());
             config.set_stdout(Output::stderr());
-        } else if !matches.is_present("c") {
+        } else if !matches.get_flag("c") {
             config.set_stdout(Output::stderr());
         }
 
@@ -127,7 +135,7 @@ fn main() -> ! {
         // recursively traverse the directory
         let mut retcode = 0;
         let it = walkdir::WalkDir::new(&cwd)
-                .follow_links(matches.is_present("L"))
+                .follow_links(matches.get_flag("L"))
                 .sort_by(|a, b| a.depth().cmp(&b.depth()) );
         for result in it {
             if let Ok(entry) = result {
@@ -146,23 +154,24 @@ fn main() -> ! {
     }
 
     // check files using the given SFV listing
-    if matches.is_present("g") || matches.is_present("f") {
+    if matches.contains_id("g") || matches.contains_id("f") {
         // get the path to the SFV listing and the working directory
-        let sfv = matches.values_of("g").or(matches.values_of("f")).unwrap().last().map(Path::new).unwrap();
-        let workdir = if matches.is_present("g") {
+        let sfv = matches.get_many::<String>("g").or(matches.get_many::<String>("f")).unwrap().last().map(Path::new).unwrap();
+        let workdir = if matches.contains_id("g") {
             sfv.parent()
         } else {
-            matches.value_of("C").map(Path::new)
+            matches.get_one::<String>("C").map(Path::new)
         };
 
         // get the files to check if any
-        let files = matches.values_of("file").map(|f| f.map(Path::new));
+        let files = matches.get_many::<String>("file")
+            .map(|values| values.map(Path::new));
 
         // assign the right output stream
-        if matches.is_present("q") {
+        if matches.get_flag("q") {
             config.set_stderr(Output::devnull());
             config.set_stdout(Output::stderr());
-        } else if !matches.is_present("c") {
+        } else if !matches.get_flag("c") {
             config.set_stdout(Output::stderr());
         }
 
@@ -172,13 +181,15 @@ fn main() -> ! {
     }
 
     // generate a new sfv file if given files as input
-    if let Some(files) = matches.values_of("file") {
-        config.set_print_basename(matches.is_present("b"));
+    if let Some(files) = matches.get_many::<String>("file") {
+        config.set_print_basename(matches.get_flag("b"));
         let result = newsfv(files.map(Path::new), config).unwrap();
         std::process::exit(!result as i32);
     }
 
     // otherwise is no operation given exit with EINVAL
-    println!("{}", matches.usage());
-    std::process::exit(22);
+    match command.print_help() {
+        Ok(_) => std::process::exit(22),
+        Err(e) => std::process::exit(e.raw_os_error().unwrap_or(1))
+    }
 }

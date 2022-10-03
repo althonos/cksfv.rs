@@ -91,7 +91,7 @@ mod io {
                     --------------------------------------------------------------------------------
                     Everything OK
                     "#
-                )
+                ).trim()
             )
             .unwrap()
     }
@@ -109,17 +109,16 @@ mod io {
                     2.txt                                             OK
                     Everything OK
                     "#
-                )
+                ).trim()
             )
             .and()
-            .stderr().satisfies(|x|
-                x.ends_with(dedent!(
+            .stderr().contains(
+                dedent!(
                     r#"
                     --( Verifying: tests/data/12.sfv )----------------------------------------------
                     --------------------------------------------------------------------------------
                     "#
-                )),
-                "wrong output\n"
+                ).trim()
             )
             .unwrap()
     }
