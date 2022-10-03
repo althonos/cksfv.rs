@@ -134,25 +134,23 @@ fn main() -> ! {
         let it = walkdir::WalkDir::new(&cwd)
             .follow_links(matches.get_flag("L"))
             .sort_by(|a, b| a.depth().cmp(&b.depth()));
-        for result in it {
-            if let Ok(entry) = result {
-                if entry
-                    .path()
-                    .extension()
-                    .map(|x| x == "sfv")
-                    .unwrap_or(false)
-                {
-                    let workdir = entry.path().parent().unwrap();
-                    let sfv = entry.path().strip_prefix(workdir).unwrap();
-                    write!(
-                        config.stderr_mut(),
-                        "Entering directory: {}\n",
-                        workdir.display()
-                    )
-                    .unwrap();
-                    std::env::set_current_dir(workdir).unwrap();
-                    retcode *= 1 - cksfv(sfv, None, config.clone(), files.clone()).unwrap() as i32;
-                }
+        for entry in it.into_iter().flat_map(Result::ok) {
+            if entry
+                .path()
+                .extension()
+                .map(|x| x == "sfv")
+                .unwrap_or(false)
+            {
+                let workdir = entry.path().parent().unwrap();
+                let sfv = entry.path().strip_prefix(workdir).unwrap();
+                writeln!(
+                    config.stderr_mut(),
+                    "Entering directory: {}",
+                    workdir.display()
+                )
+                .unwrap();
+                std::env::set_current_dir(workdir).unwrap();
+                retcode *= 1 - cksfv(sfv, None, config.clone(), files.clone()).unwrap() as i32;
             }
         }
 
@@ -165,7 +163,7 @@ fn main() -> ! {
         // get the path to the SFV listing and the working directory
         let sfv = matches
             .get_many::<String>("g")
-            .or(matches.get_many::<String>("f"))
+            .or_else(|| matches.get_many::<String>("f"))
             .unwrap()
             .last()
             .map(Path::new)
