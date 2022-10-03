@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/althonos/cksfv.rs/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/althonos/cksfv.rs/compare/v0.1.2...HEAD
+
+
+## [v0.1.2] - 2022-10-03
+
+[v0.1.2]: https://github.com/althonos/cksfv.rs/compare/v0.1.1...v0.1.2
+
+### Changed
+- Updated `clap` dependency to `4.0.1`.
 
 
 ## [v0.1.1] - 2020-04-07

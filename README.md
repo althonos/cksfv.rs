@@ -3,13 +3,14 @@
 *A 10x faster drop-in reimplementation of [cksfv](https://zakalwe.fi/~shd/foss/cksfv/)
 using Rust and the [crc32fast](https://crates.io/crates/crc32fast) crate.*
 
-[![TravisCI](https://img.shields.io/travis/com/althonos/cksfv.rs/master.svg?maxAge=600&style=flat-square)](https://travis-ci.com/althonos/cksfv.rs/branches)
+[![Actions](https://img.shields.io/github/workflow/status/althonos/cksfv.rs/Test?style=flat-square&maxAge=600)](https://github.com/fastobo/fastobo-validator/actions)
 [![Codecov](https://img.shields.io/codecov/c/gh/althonos/cksfv.rs/master.svg?style=flat-square&maxAge=600)](https://codecov.io/gh/althonos/cksfv.rs)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square&maxAge=2678400)](https://choosealicense.com/licenses/mit/)
 [![Source](https://img.shields.io/badge/source-GitHub-303030.svg?maxAge=2678400&style=flat-square)](https://github.com/althonos/cksfv.rs)
 [![Crate](https://img.shields.io/crates/v/cksfv.svg?maxAge=600&style=flat-square)](https://crates.io/crates/cksfv)
 [![Documentation](https://img.shields.io/badge/docs.rs-latest-4d76ae.svg?maxAge=2678400&style=flat-square)](https://docs.rs/cksfv)
 [![Changelog](https://img.shields.io/badge/keep%20a-changelog-8A0707.svg?maxAge=2678400&style=flat-square)](https://github.com/althonos/cksfv.rs/blob/master/CHANGELOG.md)
+[![GitHub issues](https://img.shields.io/github/issues/althonos/cksfv.rs.svg?style=flat-square)](https://github.com/althonos/cksfv.rs/issues)
 
 
 ## 🗺️ Overview
@@ -36,9 +37,9 @@ Features from the original binary:
 - [ ] SFV filtering in validation mode using files given as arguments
 - [ ] Specific options:
   - [x] `-b` flag to only print base filenames
-  - [ ] `-c` flag to print everything to STDOUT
+  - [x] `-c` flag to print everything to STDOUT
   - [x] `-C` flag to change directory when processing files
-  - [ ] `-i` flag to ignore case on filenames
+  - [x] `-i` flag to ignore case on filenames
   - [x] `-L` flag to follow symlinks
   - [x] `-q` flag to only print error messages
   - [ ] `-s` flag to replace backslashes
