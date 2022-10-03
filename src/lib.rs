@@ -6,13 +6,13 @@ extern crate crc32fast;
 #[cfg(feature = "mmap")]
 extern crate memmap;
 
-use std::fs::File;
 use std::fmt::Debug;
-use std::io::Read;
+use std::fs::File;
 use std::io::BufRead;
 use std::io::BufReader;
-use std::io::Write;
 use std::io::Error as IoError;
+use std::io::Read;
+use std::io::Write;
 use std::iter::IntoIterator;
 use std::path::Path;
 
@@ -20,10 +20,10 @@ use chrono::DateTime;
 use chrono::Datelike;
 use chrono::Local;
 use chrono::Timelike;
+use crc32fast::Hasher;
 use getset::Getters;
 use getset::MutGetters;
 use getset::Setters;
-use crc32fast::Hasher;
 
 /// Use a 64k buffer size for better performance.
 const DEFAULT_BUFFER_SIZE: usize = 65536;
@@ -213,7 +213,7 @@ impl Config {
 pub fn newsfv<'a, F, C>(files: F, config: C) -> Result<bool, IoError>
 where
     F: IntoIterator<Item = &'a Path>,
-    C: Into<Option<Config>>
+    C: Into<Option<Config>>,
 {
     // get a default config if none provided.
     let mut cfg: Config = config.into().unwrap_or_default();
@@ -234,7 +234,11 @@ where
         now.minute(),
         now.second(),
     )?;
-    write!(cfg.stdout, "; Project web site: {}\n", env!("CARGO_PKG_REPOSITORY"))?;
+    write!(
+        cfg.stdout,
+        "; Project web site: {}\n",
+        env!("CARGO_PKG_REPOSITORY")
+    )?;
     write!(cfg.stdout, ";\n")?;
     for file in files.iter().filter(|p| p.is_file()) {
         if let Ok(metadata) = std::fs::metadata(file) {
@@ -260,7 +264,12 @@ where
         match compute_crc32(file) {
             Ok(crc32) if cfg.print_basename => {
                 let name = file.file_name().unwrap();
-                write!(cfg.stdout, "{} {:08X}\n",  AsRef::<Path>::as_ref(&name).display(), crc32)?
+                write!(
+                    cfg.stdout,
+                    "{} {:08X}\n",
+                    AsRef::<Path>::as_ref(&name).display(),
+                    crc32
+                )?
             }
             Ok(crc32) => write!(cfg.stdout, "{} {:08X}\n", file.display(), crc32)?,
             Err(err) => {
@@ -278,10 +287,15 @@ where
 ///
 /// This function always writes some progress messages to `config.stderr`, and
 /// outputs a message line for each file it checks to `config.stdout`.
-pub fn cksfv<'a, F, C>(sfv: &Path, workdir: Option<&Path>, config: C, files: Option<F>) -> Result<bool, IoError>
+pub fn cksfv<'a, F, C>(
+    sfv: &Path,
+    workdir: Option<&Path>,
+    config: C,
+    files: Option<F>,
+) -> Result<bool, IoError>
 where
     F: IntoIterator<Item = &'a Path>,
-    C: Into<Option<Config>>
+    C: Into<Option<Config>>,
 {
     // get a default config if none provided.
     let mut cfg: Config = config.into().unwrap_or_default();
@@ -316,7 +330,7 @@ where
                 // extract filename and CRC from listing
                 let i = line.trim_end().rfind(' ').unwrap();
                 let filename = Path::new(&line[..i]);
-                let crc32_old = u32::from_str_radix(&line[i+1..], 16).unwrap();
+                let crc32_old = u32::from_str_radix(&line[i + 1..], 16).unwrap();
                 // check the current CRC32 and compare against recorded one
                 match compute_crc32(&workdir.join(filename)) {
                     Ok(crc32_new) if crc32_new != crc32_old => {
@@ -324,7 +338,11 @@ where
                         if cfg.quiet {
                             write!(cfg.stdout, "{:<50}different CRC\n", filename.display())?;
                         } else {
-                            write!(cfg.stdout, "cksfv: {}: Has a different CRC\n", filename.display())?;
+                            write!(
+                                cfg.stdout,
+                                "cksfv: {}: Has a different CRC\n",
+                                filename.display()
+                            )?;
                         }
                     }
                     Err(err) if cfg.quiet => {

@@ -38,7 +38,8 @@ mod behaviour {
             .with_args(&["-C", &data(""), "-f", &data("1.sfv"), "-f", &data("2.sfv")])
             .succeeds()
             .and()
-            .stderr().contains(format!("Verifying: {}", data("2.sfv")).as_str())
+            .stderr()
+            .contains(format!("Verifying: {}", data("2.sfv")).as_str())
             .unwrap()
     }
 
@@ -49,7 +50,8 @@ mod behaviour {
             .with_args(&["-g", &data("1.sfv"), "-g", &data("2.sfv")])
             .succeeds()
             .and()
-            .stderr().contains(format!("Verifying: {}", data("2.sfv")).as_str())
+            .stderr()
+            .contains(format!("Verifying: {}", data("2.sfv")).as_str())
             .unwrap()
     }
 
@@ -64,7 +66,8 @@ mod behaviour {
             .with_args(&["-g", &data("1.sfv"), &data("2.txt")])
             .succeeds()
             .and()
-            .stderr().contains(format!("Verifying: {}", data("1.sfv")).as_str())
+            .stderr()
+            .contains(format!("Verifying: {}", data("1.sfv")).as_str())
             .unwrap()
     }
 }
@@ -80,9 +83,11 @@ mod io {
             .with_args(&["-g", &data("12.sfv")])
             .succeeds()
             .and()
-            .stdout().is("")
+            .stdout()
+            .is("")
             .and()
-            .stderr().contains(
+            .stderr()
+            .contains(
                 dedent!(
                     r#"
                     --( Verifying: tests/data/12.sfv )----------------------------------------------
@@ -91,7 +96,8 @@ mod io {
                     --------------------------------------------------------------------------------
                     Everything OK
                     "#
-                ).trim()
+                )
+                .trim(),
             )
             .unwrap()
     }
@@ -102,23 +108,25 @@ mod io {
             .with_args(&["-c", "-g", &data("12.sfv")])
             .succeeds()
             .and()
-            .stdout().is(
-                dedent!(
-                    r#"
+            .stdout()
+            .is(dedent!(
+                r#"
                     1.txt                                             OK
                     2.txt                                             OK
                     Everything OK
                     "#
-                ).trim()
             )
+            .trim())
             .and()
-            .stderr().contains(
+            .stderr()
+            .contains(
                 dedent!(
                     r#"
                     --( Verifying: tests/data/12.sfv )----------------------------------------------
                     --------------------------------------------------------------------------------
                     "#
-                ).trim()
+                )
+                .trim(),
             )
             .unwrap()
     }
@@ -194,70 +202,94 @@ mod io {
             .succeeds()
             .and()
             .stdout()
-                .contains(dedent!(
+            .contains(
+                dedent!(
                     r#"
                     1.txt                                             OK
                     2.txt                                             OK
                     Everything OK
                     "#
-                ).trim())
+                )
+                .trim(),
+            )
             .stdout()
-                .contains(dedent!(
+            .contains(
+                dedent!(
                     r#"
                     1.txt                                             OK
                     Everything OK
                     "#
-                ).trim())
+                )
+                .trim(),
+            )
             .stdout()
-                .contains(dedent!(
+            .contains(
+                dedent!(
                     r#"
                     2.txt                                             OK
                     Everything OK
                     "#
-                ).trim())
+                )
+                .trim(),
+            )
             .stdout()
-                .contains(dedent!(
+            .contains(
+                dedent!(
                     r#"
                     Everything OK
                     "#
-                ).trim())
+                )
+                .trim(),
+            )
             .and()
             .stderr()
-                .contains(textwrap::dedent(&format!(
+            .contains(
+                textwrap::dedent(&format!(
                     r#"
                     Entering directory: {projdir}/tests/data
                     --( Verifying: 12.sfv )---------------------------------------------------------
                     --------------------------------------------------------------------------------
                     "#,
                     projdir = env!("CARGO_MANIFEST_DIR")
-                )).trim())
+                ))
+                .trim(),
+            )
             .stderr()
-                .contains(textwrap::dedent(&format!(
+            .contains(
+                textwrap::dedent(&format!(
                     r#"
                     Entering directory: {projdir}/tests/data
                     --( Verifying: 2.sfv )----------------------------------------------------------
                     --------------------------------------------------------------------------------
                     "#,
                     projdir = env!("CARGO_MANIFEST_DIR")
-                )).trim())
+                ))
+                .trim(),
+            )
             .stderr()
-                .contains(textwrap::dedent(&format!(
+            .contains(
+                textwrap::dedent(&format!(
                     r#"
                     Entering directory: {projdir}/tests/data
                     --( Verifying: 1.sfv )----------------------------------------------------------
                     --------------------------------------------------------------------------------
                     "#,
                     projdir = env!("CARGO_MANIFEST_DIR")
-                )).trim())
+                ))
+                .trim(),
+            )
             .stderr()
-                .contains(textwrap::dedent(&format!(
+            .contains(
+                textwrap::dedent(&format!(
                     r#"
                     Entering directory: {projdir}/tests/data
                     --( Verifying: 0.sfv )----------------------------------------------------------
                     --------------------------------------------------------------------------------
                     "#,
                     projdir = env!("CARGO_MANIFEST_DIR")
-                )).trim())
+                ))
+                .trim(),
+            )
             .unwrap()
     }
 
@@ -267,9 +299,11 @@ mod io {
             .with_args(&["-r", "-q"])
             .succeeds()
             .and()
-            .stdout().is("")
+            .stdout()
+            .is("")
             .and()
-            .stderr().doesnt_contain("Everything OK")
+            .stderr()
+            .doesnt_contain("Everything OK")
             .unwrap()
     }
 }
