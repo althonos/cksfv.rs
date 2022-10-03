@@ -29,8 +29,8 @@ jobs:
       with:
         command: clippy
 
-  check:
-    name: Build (${{ matrix.rust-toolchain }})
+  test:
+    name: Test (${{ matrix.rust-toolchain }})
     needs: lint
     runs-on: ubuntu-latest
     strategy:
@@ -56,10 +56,10 @@ jobs:
     - name: Check code
       uses: actions-rs/cargo@v1
       with:
-        command: check
+        command: test
 
   publish:
-    needs: check
+    needs: test
     runs-on: ubuntu-latest
     environment: Crates.io
     if: "startsWith(github.ref, 'refs/tags/v')"
