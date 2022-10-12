@@ -112,7 +112,7 @@ dependencies = [
 
 [[package]]
 name = "cksfv"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "assert_cli",
  "chrono",
@@ -128,9 +128,9 @@ dependencies = [
 
 [[package]]
 name = "clap"
-version = "4.0.8"
+version = "4.0.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5840cd9093aabeabf7fd932754c435b7674520fc3ddc935c397837050f0f1e4b"
+checksum = "69d64e88428747154bd8bc378d178377ef4dace7a5735ca1f3855be72f2c2cb5"
 dependencies = [
  "atty",
  "bitflags",
