@@ -112,7 +112,7 @@ dependencies = [
 
 [[package]]
 name = "cksfv"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "assert_cli",
  "chrono",
@@ -558,16 +558,6 @@ dependencies = [
 
 [[package]]
 name = "textwrap"
-version = "0.13.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3cdcf6b66102d38821c33eea2bf1e8b7bd738072171cbf8a0683fbb46fcb8b0b"
-dependencies = [
- "smawk",
- "unicode-width",
-]
-
-[[package]]
-name = "textwrap"
 version = "0.15.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "949517c0cf1bf4ee812e2e07e08ab448e3ae0d23472aee8a06c985f0c8815b16"
@@ -578,10 +568,21 @@ dependencies = [
 ]
 
 [[package]]
-name = "textwrap-macros"
-version = "0.2.5"
+name = "textwrap"
+version = "0.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7541f20a1a867af46125e7c0dd8880128682f850f5f95a078bc1b4a7b102f504"
+checksum = "222a222a5bfe1bba4a77b45ec488a741b3cb8872e5e499451fd7d0129c9c7c3d"
+dependencies = [
+ "smawk",
+ "unicode-linebreak",
+ "unicode-width",
+]
+
+[[package]]
+name = "textwrap-macros"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "975e7e5fec79db404c3f07c9182d1c4450d5e2c68340be6b5a7140f48b276a30"
 dependencies = [
  "proc-macro-hack",
  "textwrap-macros-impl",
@@ -589,14 +590,14 @@ dependencies = [
 
 [[package]]
 name = "textwrap-macros-impl"
-version = "0.2.5"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6054ec34134f3359a85ca9a47ee366be7144454fb8c1ea5812d68c963edb2db5"
+checksum = "32379e128f71c85438e4086388c6321232b64cd7e8560e2c2431d9bfc51fc3cc"
 dependencies = [
  "proc-macro-hack",
  "quote",
  "syn",
- "textwrap 0.13.2",
+ "textwrap 0.16.0",
 ]
 
 [[package]]
