@@ -6,6 +6,7 @@ extern crate crc32fast;
 #[cfg(feature = "mmap")]
 extern crate memmap;
 
+use std::cmp::min;
 use std::fmt::Debug;
 use std::fs::File;
 use std::io::BufRead;
@@ -306,7 +307,7 @@ where
         cfg.stderr,
         "--( Verifying: {} ){}",
         sfv.display(),
-        "-".repeat(63 - sfv.display().to_string().len())
+        "-".repeat(63 - min(63, sfv.display().to_string().len()))
     )?;
 
     // open the SFV listing
