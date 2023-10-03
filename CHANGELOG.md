@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/althonos/cksfv.rs/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/althonos/cksfv.rs/compare/v0.1.3...HEAD
+
+
+## [v0.1.3] - 2023-10-03
+
+[v0.1.3]: https://github.com/althonos/cksfv.rs/compare/v0.1.2...v0.1.3
+
+### Fixed
+- Crash caused by long filenames ([#111](https://github.com/althonos/cksfv.rs/issues/111), [#119](https://github.com/althonos/cksfv.rs/pull/119), by [@stensson](https://github.com/stensson)).
 
 
 ## [v0.1.2] - 2022-10-03
